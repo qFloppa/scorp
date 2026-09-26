@@ -314,19 +314,22 @@
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const el = id => document.getElementById(id);
 
+  /* =========================================================================
+     SET THE TOKEN CONTRACT HERE. This one value drives the chart, the CA
+     field, the Copy button, and the Buy link. Leave "" before launch.
+     ========================================================================= */
+  const TOKEN         = "0xD09823d4C89E39E4d81953fc731C5a5D23082CFE";
+  const GECKO_NETWORK = "robinhood"; // GeckoTerminal / Robinhood Chain network slug
+  const BUY_URL       = TOKEN ? `https://www.ponsfamily.com/launchpad/${TOKEN}` : "";
+
   /* ---- ticker: clone once for a seamless -50% loop ---- */
   const track = el("ticker");
   track.innerHTML += track.innerHTML;
 
-  /* ---- live chart: GeckoTerminal. set the token CA below; the pool is auto-resolved ---- */
-  // ponytail: GeckoTerminal indexes Robinhood Chain incl. pre-graduation PONS curves — DexScreener
-  // does not, which is why its embed hung. Give the token contract; we resolve its top pool via the
-  // GeckoTerminal API. GECKO_NETWORK is the chain slug; change it only for a token on another chain.
-  const DEX_ADDRESS   = "0xD09823d4C89E39E4d81953fc731C5a5D23082CFE"; // token contract address
-  const GECKO_NETWORK = "robinhood"; // GeckoTerminal network slug (Robinhood Chain)
+  /* ---- live chart: GeckoTerminal (indexes Robinhood Chain incl. pre-graduation PONS ---- */
+  /* ---- curves; DexScreener does not). Resolves TOKEN's top pool via the API. ---- */
   const pairEl  = el("chartPair");
   const chartEl = el("tvChart");
-
   const embedPool = (pool) => {
     const f = document.createElement("iframe");
     f.src = `https://www.geckoterminal.com/${GECKO_NETWORK}/pools/${pool}?embed=1&info=0&swaps=0&light_chart=0`;
@@ -334,34 +337,41 @@
     f.style.cssText = "width:100%;height:100%;border:0;display:block";
     chartEl.replaceChildren(f);
   };
+  const chartMsg = (html) => { if (chartEl) chartEl.innerHTML = `<div class="chart-msg">${html}</div>`; };
 
-  if (chartEl){
-    fetch(`https://api.geckoterminal.com/api/v2/networks/${GECKO_NETWORK}/tokens/${DEX_ADDRESS}/pools`)
+  if (chartEl && !TOKEN){
+    chartMsg("Chart goes live at launch.");
+    if (pairEl) pairEl.textContent = "—";
+  } else if (chartEl){
+    fetch(`https://api.geckoterminal.com/api/v2/networks/${GECKO_NETWORK}/tokens/${TOKEN}/pools`)
       .then(r => r.ok ? r.json() : Promise.reject(r.status))
       .then(d => {
         const p = d && d.data && d.data[0];
         if (!p){
-          chartEl.innerHTML = '<div class="chart-msg">No pool for this token yet.<br>'
-            + 'The chart appears once it has liquidity and a first trade.<br>'
-            + `<a href="https://www.geckoterminal.com/${GECKO_NETWORK}/pools/${DEX_ADDRESS}" target="_blank" rel="noopener">open on GeckoTerminal ↗</a></div>`;
+          chartMsg('No pool for this token yet.<br>The chart appears once it has liquidity and a first trade.<br>'
+            + `<a href="https://www.geckoterminal.com/${GECKO_NETWORK}/pools/${TOKEN}" target="_blank" rel="noopener">open on GeckoTerminal ↗</a>`);
           if (pairEl) pairEl.textContent = "no pool yet";
           return;
         }
         embedPool(p.attributes.address);
-        if (pairEl) pairEl.textContent = `${GECKO_NETWORK} · ${p.attributes.name || DEX_ADDRESS}`;
+        if (pairEl) pairEl.textContent = `${GECKO_NETWORK} · ${p.attributes.name || TOKEN}`;
       })
       .catch(() => { // API unreachable — the token-address URL 307-redirects to the pool anyway
-        embedPool(DEX_ADDRESS);
-        if (pairEl) pairEl.textContent = `${GECKO_NETWORK} · ${DEX_ADDRESS.slice(0,6)}…${DEX_ADDRESS.slice(-4)}`;
+        embedPool(TOKEN);
+        if (pairEl) pairEl.textContent = `${GECKO_NETWORK} · ${TOKEN.slice(0,6)}…${TOKEN.slice(-4)}`;
       });
   }
 
-  /* ---- copy CA (honest: nothing to copy pre-launch) ---- */
-  const CA = ""; // ponytail: paste the real mint address here at launch; empty = not live yet.
+  /* ---- contract field + copy + Buy link, all driven by TOKEN above ---- */
+  const caText = el("caText"), buyBtn = document.querySelector('[data-cta="buy"]');
+  if (TOKEN){
+    if (caText) caText.textContent = TOKEN;
+    if (buyBtn){ buyBtn.href = BUY_URL; buyBtn.target = "_blank"; buyBtn.rel = "noopener"; }
+  }
   el("copyBtn").addEventListener("click", async (e) => {
     const b = e.currentTarget;
-    if (!CA){ b.textContent = "Soon™"; setTimeout(() => b.textContent = "Copy", 1400); return; }
-    try { await navigator.clipboard.writeText(CA); b.textContent = "Copied ✓"; }
+    if (!TOKEN){ b.textContent = "Soon™"; setTimeout(() => b.textContent = "Copy", 1400); return; }
+    try { await navigator.clipboard.writeText(TOKEN); b.textContent = "Copied ✓"; }
     catch { b.textContent = "Copy failed"; }
     setTimeout(() => b.textContent = "Copy", 1400);
   });
