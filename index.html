@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>$SCORP — Higher For Everyone</title>
+<meta name="description" content="$SCORP is coming. The venom is in the green. A meme, a mascot, a movement — Higher For Everyone." />
+<meta name="theme-color" content="#030b06" />
+
+<!-- Open Graph / social -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="$SCORP — Higher For Everyone" />
+<meta property="og:description" content="The venom is in the green. Launching soon." />
+<meta property="og:image" content="scorp.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="$SCORP — Higher For Everyone" />
+<meta name="twitter:image" content="scorp.jpg" />
+<link rel="icon" type="image/jpeg" href="scorp.jpg" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+  :root{
+    --bg:#030b06;
+    --bg-2:#06160d;
+    --panel:rgba(9,26,17,.62);
+    --line:rgba(63,255,138,.14);
+    --neon:#2dff88;
+    --neon-soft:#7dffb4;
+    --acid:#a8ff1a;
+    --red:#ff2f3f;
+    --amber:#e08a34;
+    --ink:#eafff2;
+    --muted:#6f9a82;
+    --font-display:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --font-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:var(--font-display);
+    color:var(--ink);
+    background:var(--bg);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+
+  /* ---- background stack ---- */
+  #bg{position:fixed;inset:0;z-index:-3;display:block}
+  .vignette{
+    position:fixed;inset:0;z-index:-2;pointer-events:none;
+    background:
+      radial-gradient(120% 90% at 50% -10%, rgba(45,255,136,.10), transparent 55%),
+      radial-gradient(140% 120% at 50% 120%, rgba(0,0,0,.85), transparent 60%),
+      linear-gradient(180deg, rgba(3,11,6,.2), rgba(3,11,6,.75));
+  }
+  .grain{
+    position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.06;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode:overlay;
+  }
+  .scanlines{
+    position:fixed;inset:0;z-index:40;pointer-events:none;opacity:.35;
+    background:repeating-linear-gradient(180deg, transparent 0 2px, rgba(0,0,0,.18) 2px 3px);
+    mix-blend-mode:multiply;
+  }
+
+  /* ---- shell ---- */
+  .wrap{
+    position:relative;z-index:1;min-height:100svh;
+    display:flex;flex-direction:column;
+    max-width:1240px;margin:0 auto;
+    padding:clamp(18px,3vw,34px) clamp(18px,4vw,48px) 0;
+  }
+  header.top{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding-bottom:clamp(24px,5vh,56px);
+  }
+  .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.02em}
+  .brand .glyph{
+    width:34px;height:34px;border-radius:9px;display:grid;place-items:center;
+    background:linear-gradient(145deg,#0a2416,#05130b);
+    border:1px solid rgba(45,255,136,.35);
+    box-shadow:0 0 0 1px rgba(0,0,0,.4) inset, 0 0 18px rgba(45,255,136,.18);
+    font-size:19px;
+  }
+  .status{
+    display:inline-flex;align-items:center;gap:9px;
+    font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--neon-soft);
+    padding:8px 14px;border-radius:999px;
+    background:rgba(45,255,136,.05);border:1px solid var(--line);
+  }
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--neon);box-shadow:0 0 10px var(--neon);animation:pulse 1.8s infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+
+  /* ---- hero grid ---- */
+  main{flex:1;display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,4vw,64px);align-items:center;padding-bottom:clamp(30px,6vh,70px)}
+  @media(max-width:900px){main{grid-template-columns:1fr;text-align:center;gap:34px}}
+
+  .eyebrow{
+    font-family:var(--font-mono);font-size:clamp(11px,1.4vw,13px);
+    letter-spacing:.42em;text-transform:uppercase;color:var(--muted);
+    margin:0 0 18px;
+  }
+  .wordmark{
+    margin:0;font-weight:700;line-height:.86;letter-spacing:-.02em;
+    font-size:clamp(72px,15vw,168px);
+    background:linear-gradient(180deg,#eafff2 0%,#8effc0 55%,#25e879 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 26px rgba(45,255,136,.35)) drop-shadow(0 2px 0 rgba(0,0,0,.5));
+    position:relative;
+  }
+  .wordmark .tick{color:var(--neon);-webkit-text-fill-color:var(--neon)}
+  .tagline{
+    margin:18px 0 0;max-width:30ch;
+    font-size:clamp(17px,2.4vw,22px);font-weight:500;color:#cdeedd;line-height:1.4;
+  }
+  @media(max-width:900px){.tagline{margin-inline:auto}}
+  .tagline b{color:var(--neon-soft)}
+
+  /* ---- countdown ---- */
+  .count-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin:34px 0 12px}
+  .countdown{display:flex;gap:10px}
+  @media(max-width:900px){.countdown{justify-content:center}}
+  .unit{
+    position:relative;min-width:78px;padding:16px 12px 12px;border-radius:14px;
+    background:linear-gradient(180deg,rgba(12,32,21,.9),rgba(6,18,11,.9));
+    border:1px solid var(--line);
+    box-shadow:0 18px 40px -24px rgba(0,0,0,.9), 0 0 0 1px rgba(0,0,0,.4) inset;
+    text-align:center;overflow:hidden;
+  }
+  .unit::before{content:"";position:absolute;inset:0 0 auto 0;height:1px;background:linear-gradient(90deg,transparent,rgba(45,255,136,.6),transparent)}
+  .unit .num{font-family:var(--font-mono);font-weight:700;font-size:clamp(30px,4.5vw,42px);color:var(--ink);line-height:1;font-variant-numeric:tabular-nums;text-shadow:0 0 18px rgba(45,255,136,.35)}
+  .unit .cap{display:block;margin-top:8px;font-family:var(--font-mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+  .live-badge{
+    display:none;font-family:var(--font-mono);font-weight:700;letter-spacing:.2em;
+    color:#031107;background:var(--neon);padding:14px 22px;border-radius:12px;
+    box-shadow:0 0 34px rgba(45,255,136,.5);text-transform:uppercase;
+  }
+
+  /* ---- CTAs ---- */
+  .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+  @media(max-width:900px){.cta-row{justify-content:center}}
+  .btn{
+    display:inline-flex;align-items:center;gap:9px;cursor:pointer;
+    font-family:var(--font-mono);font-size:13px;font-weight:500;letter-spacing:.06em;
+    padding:13px 20px;border-radius:11px;border:1px solid var(--line);
+    background:rgba(9,26,17,.6);color:var(--ink);
+    transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+  .btn svg{width:16px;height:16px}
+  .btn:hover{transform:translateY(-2px);border-color:rgba(45,255,136,.45);box-shadow:0 12px 30px -16px rgba(45,255,136,.7)}
+  .btn.primary{background:linear-gradient(180deg,var(--neon),#12c866);color:#03110a;border-color:transparent;font-weight:700;box-shadow:0 10px 30px -12px rgba(45,255,136,.8)}
+  .btn.primary:hover{box-shadow:0 16px 40px -14px rgba(45,255,136,.95)}
+  .btn:focus-visible{outline:2px solid var(--neon);outline-offset:3px}
+
+  /* ---- contract bar ---- */
+  .ca{
+    display:flex;align-items:center;gap:12px;margin-top:22px;max-width:440px;
+    padding:12px 12px 12px 16px;border-radius:12px;
+    background:rgba(4,14,9,.75);border:1px dashed rgba(63,255,138,.28);
+  }
+  @media(max-width:900px){.ca{margin-inline:auto}}
+  .ca .k{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+  .ca .v{font-family:var(--font-mono);font-size:13px;color:var(--neon-soft);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ca button{
+    flex:none;cursor:pointer;font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;
+    padding:8px 12px;border-radius:8px;border:1px solid var(--line);
+    background:rgba(45,255,136,.08);color:var(--neon-soft);transition:.16s;
+  }
+  .ca button:hover{background:rgba(45,255,136,.16)}
+  .ca button:focus-visible{outline:2px solid var(--neon);outline-offset:2px}
+
+  /* ---- hero art ---- */
+  .art{position:relative;display:grid;place-items:center}
+  .art .halo{
+    position:absolute;width:118%;aspect-ratio:1;border-radius:50%;z-index:0;
+    background:conic-gradient(from 0deg,#2dff88,#a8ff1a,#2dff88,#0b6b3a,#2dff88);
+    filter:blur(46px);opacity:.5;animation:spin 14s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .art .frame{
+    position:relative;z-index:1;width:min(430px,84vw);aspect-ratio:1;border-radius:26px;
+    padding:10px;background:linear-gradient(160deg,rgba(45,255,136,.5),rgba(4,14,9,.2));
+    box-shadow:0 40px 90px -40px rgba(0,0,0,.9);
+  }
+  .art .frame img{width:100%;height:100%;object-fit:cover;border-radius:18px;display:block;animation:float 6s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  .art .plate{
+    position:absolute;z-index:2;bottom:-14px;left:50%;transform:translateX(-50%);
+    display:flex;gap:18px;padding:10px 18px;border-radius:12px;
+    background:rgba(3,11,6,.92);border:1px solid var(--line);backdrop-filter:blur(6px);
+    font-family:var(--font-mono);font-size:13px;white-space:nowrap;
+  }
+  .art .plate span{color:var(--neon);font-weight:700}
+  .art .plate .up::before{content:"▲ ";font-size:10px}
+
+  /* ---- ticker ---- */
+  .ticker{
+    position:relative;z-index:1;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    background:rgba(3,11,6,.55);overflow:hidden;padding:11px 0;margin-top:auto;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+  }
+  .ticker .track{display:flex;gap:44px;width:max-content;animation:marquee 32s linear infinite}
+  .ticker .item{font-family:var(--font-mono);font-size:13px;letter-spacing:.08em;color:#bfe9d3;display:inline-flex;gap:10px;align-items:center}
+  .ticker .item b{color:var(--neon)}
+  .ticker .item .sep{color:var(--red)}
+  @keyframes marquee{to{transform:translateX(-50%)}}
+
+  /* ---- footer ---- */
+  footer{position:relative;z-index:1;max-width:1240px;margin:0 auto;width:100%;
+    padding:20px clamp(18px,4vw,48px) 30px;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center}
+  footer p{margin:0;font-family:var(--font-mono);font-size:11px;line-height:1.6;color:var(--muted);max-width:62ch}
+  footer .made{font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.1em}
+
+  /* ---- reveal + motion ---- */
+  [data-reveal]{opacity:0;transform:translateY(18px);animation:reveal .9s cubic-bezier(.2,.7,.2,1) forwards}
+  [data-reveal="1"]{animation-delay:.05s}[data-reveal="2"]{animation-delay:.15s}
+  [data-reveal="3"]{animation-delay:.25s}[data-reveal="4"]{animation-delay:.35s}
+  [data-reveal="5"]{animation-delay:.45s}[data-reveal="6"]{animation-delay:.55s}
+  @keyframes reveal{to{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition:none !important}
+    [data-reveal]{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="wrap">
+  <header class="top" data-reveal="1">
+    <a class="brand" href="#" aria-label="SCORP home">
+      <span class="glyph" aria-hidden="true">🦂</span>
+      <span>SCORP</span>
+    </a>
+    <span class="status"><span class="dot" aria-hidden="true"></span> Launch imminent</span>
+  </header>
+
+  <main>
+    <section class="lead">
+      <p class="eyebrow" data-reveal="1">Meme &nbsp;/&nbsp; Mascot &nbsp;/&nbsp; Movement</p>
+      <h1 class="wordmark" data-reveal="2"><span class="tick">$</span>SCORP</h1>
+      <p class="tagline" data-reveal="3">The venom is in the green. One sting and you're <b>higher for everyone</b>. Chart-climbing arachnid energy, coming to a wallet near you.</p>
+
+      <p class="count-label" data-reveal="4">Contract goes live in</p>
+      <div class="countdown" id="countdown" data-reveal="4" role="timer" aria-live="polite" aria-label="Time until launch">
+        <div class="unit"><span class="num" id="dd">00</span><span class="cap">Days</span></div>
+        <div class="unit"><span class="num" id="hh">00</span><span class="cap">Hours</span></div>
+        <div class="unit"><span class="num" id="mm">00</span><span class="cap">Mins</span></div>
+        <div class="unit"><span class="num" id="ss">00</span><span class="cap">Secs</span></div>
+      </div>
+      <div class="live-badge" id="liveBadge">🟢 We're live — go get stung</div>
+
+      <div class="cta-row" data-reveal="5">
+        <a class="btn primary" href="#" data-cta="buy">Buy $SCORP<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn" href="#" aria-label="Follow on X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.1 8.1L23.3 22h-6.6l-5.2-6.8L5.6 22H2.5l7.6-8.7L1 2h6.8l4.7 6.2L18.9 2Zm-1.2 18h1.8L7.4 3.8H5.5L17.7 20Z"/></svg>Follow</a>
+        <a class="btn" href="#" aria-label="Join Telegram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3 18.8 19c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.6 13 1.9 11.5c-1-.3-1-1 .2-1.5l18.3-7c.9-.3 1.6.2 1.5 1.3Z"/></svg>Telegram</a>
+        <a class="btn" href="#" aria-label="View on Dexscreener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l3-4 3 2 4-6"/></svg>Chart</a>
+      </div>
+
+      <div class="ca" data-reveal="6">
+        <span class="k">CA</span>
+        <span class="v" id="caText">dropping&nbsp;at&nbsp;launch — don't&nbsp;trust,&nbsp;verify</span>
+        <button id="copyBtn" type="button" aria-label="Copy contract address">Copy</button>
+      </div>
+    </section>
+
+    <section class="art" data-reveal="3" aria-label="SCORP mascot">
+      <div class="halo" aria-hidden="true"></div>
+      <div class="frame">
+        <img src="scorp.jpg" alt="$SCORP mascot — a neon-green Pepe-scorpion with a red stinger rising over a green market chart" />
+      </div>
+      <div class="plate" aria-hidden="true">
+        <span class="up">286.4%</span><span class="up">156.3%</span><span class="up">42.7%</span>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="ticker" aria-hidden="true">
+  <div class="track" id="ticker">
+    <span class="item"><b>$SCORP</b> higher for everyone</span><span class="item sep">◆</span>
+    <span class="item">stinger up <b>+286.4%</b></span><span class="item sep">◆</span>
+    <span class="item">liquidity <b>locked</b></span><span class="item sep">◆</span>
+    <span class="item">contract <b>renounced</b></span><span class="item sep">◆</span>
+    <span class="item">the venom is in the <b>green</b></span><span class="item sep">◆</span>
+    <span class="item">1,000,000,000 supply</span><span class="item sep">◆</span>
+    <span class="item">no team tokens, <b>no games</b></span><span class="item sep">◆</span>
+  </div>
+</div>
+
+<footer>
+  <p>$SCORP is a community meme token with no intrinsic value and no expectation of financial return. Nothing here is financial advice. Crypto is volatile — only ape what you can afford to lose. 🦂</p>
+  <span class="made">© 2026 $SCORP</span>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  // ponytail: launch date is the calibration knob — set LAUNCH to your real drop time (UTC).
+  const LAUNCH = new Date("2026-10-03T16:00:00Z");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const pad = n => String(n).padStart(2, "0");
+  const el = id => document.getElementById(id);
+
+  /* ---- countdown ---- */
+  const parts = { dd: el("dd"), hh: el("hh"), mm: el("mm"), ss: el("ss") };
+  function tick(){
+    const diff = LAUNCH - Date.now();
+    if (diff <= 0){
+      el("countdown").style.display = "none";
+      el("liveBadge").style.display = "inline-block";
+      return true;
+    }
+    const s = Math.floor(diff / 1000);
+    parts.dd.textContent = pad(Math.floor(s / 86400));
+    parts.hh.textContent = pad(Math.floor(s % 86400 / 3600));
+    parts.mm.textContent = pad(Math.floor(s % 3600 / 60));
+    parts.ss.textContent = pad(s % 60);
+    return false;
+  }
+  if (!tick()) setInterval(tick, 1000);
+
+  /* ---- ticker: clone once for a seamless -50% loop ---- */
+  const track = el("ticker");
+  track.innerHTML += track.innerHTML;
+
+  /* ---- copy CA (honest: nothing to copy pre-launch) ---- */
+  const CA = ""; // ponytail: paste the real mint address here at launch; empty = not live yet.
+  el("copyBtn").addEventListener("click", async (e) => {
+    const b = e.currentTarget;
+    if (!CA){ b.textContent = "Soon™"; setTimeout(() => b.textContent = "Copy", 1400); return; }
+    try { await navigator.clipboard.writeText(CA); b.textContent = "Copied ✓"; }
+    catch { b.textContent = "Copy failed"; }
+    setTimeout(() => b.textContent = "Copy", 1400);
+  });
+
+  /* ---- background: trading-desk grid + rising green candles ---- */
+  const cv = el("bg"), ctx = cv.getContext("2d");
+  let W = 0, H = 0, dpr = 1, candles = [], t = 0;
+
+  function resize(){
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    cv.style.width = W + "px"; cv.style.height = H + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function spawn(){
+    const up = Math.random() > 0.32;              // mostly green — it only goes up
+    const bh = 20 + Math.random() * 90;
+    return {
+      x: Math.random() * W,
+      y: H + 40 + Math.random() * H,
+      w: 5 + Math.random() * 6,
+      bh, wick: bh * (0.4 + Math.random() * 0.7),
+      v: 0.25 + Math.random() * 0.85,
+      up, a: 0.10 + Math.random() * 0.32
+    };
+  }
+  function seed(){ candles = Array.from({ length: Math.round(W / 42) }, spawn); }
+
+  function grid(){
+    const step = 46, off = (t * 0.35) % step;
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "rgba(63,255,138,0.05)";
+    ctx.beginPath();
+    for (let x = -off; x < W; x += step){ ctx.moveTo(x, 0); ctx.lineTo(x, H); }
+    for (let y = H + off; y > 0; y -= step){ ctx.moveTo(0, y); ctx.lineTo(W, y); }
+    ctx.stroke();
+  }
+  function candle(c){
+    const cx = c.x + c.w / 2, col = c.up ? "45,255,136" : "255,47,63";
+    ctx.strokeStyle = `rgba(${col},${c.a})`;
+    ctx.fillStyle = `rgba(${col},${c.a * 0.85})`;
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(cx, c.y - c.wick); ctx.lineTo(cx, c.y + c.bh + c.wick); ctx.stroke();
+    ctx.fillRect(c.x, c.y, c.w, c.bh);
+  }
+  function frame(){
+    ctx.clearRect(0, 0, W, H);
+    grid();
+    for (const c of candles){
+      candle(c);
+      c.y -= c.v; c.x += c.v * 0.18;
+      if (c.y + c.bh + c.wick < -20) Object.assign(c, spawn());
+    }
+    t += 1;
+    requestAnimationFrame(frame);
+  }
+
+  resize(); seed();
+  addEventListener("resize", () => { resize(); seed(); }, { passive: true });
+  if (reduce){ grid(); candles.forEach(candle); }   // one static frame, no motion
+  else requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
+
+
